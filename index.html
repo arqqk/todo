@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Умный To-Do лист</title>
+    
+    <!-- PWA Meta tags для iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="To-Do">
+    <meta name="theme-color" content="#4361ee">
+    
+    <!-- Подключение манифеста -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Иконки для iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120x120.png">
+    
+    <!-- Экран загрузки для iOS (разные размеры) -->
+    <link href="icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+    <link href="icons/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+    <link href="icons/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+    <link href="icons/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image">
+    <link href="icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+    <link href="icons/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка приложения -->
+        <header class="app-header">
+            <h1>Мои задачи</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+        </header>
+        
+        <!-- Форма добавления задачи -->
+        <div class="add-task-form">
+            <input type="text" id="taskInput" class="task-input" placeholder="Что нужно сделать?" autocomplete="off">
+            
+            <div class="task-options">
+                <select id="categorySelect" class="category-select">
+                    <option value="Работа">💼 Работа</option>
+                    <option value="Личное">🏠 Личное</option>
+                    <option value="Учеба">📚 Учеба</option>
+                    <option value="Здоровье">💪 Здоровье</option>
+                </select>
+                
+                <input type="date" id="deadlineInput" class="date-input">
+            </div>
+            
+            <button id="addTaskBtn" class="add-btn">+ Добавить задачу</button>
+        </div>
+        
+        <!-- Фильтры -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="Работа">💼 Работа</button>
+            <button class="filter-btn" data-filter="Личное">🏠 Личное</button>
+            <button class="filter-btn" data-filter="Учеба">📚 Учеба</button>
+            <button class="filter-btn" data-filter="Здоровье">💪 Здоровье</button>
+        </div>
+        
+        <!-- Статистика -->
+        <div class="stats">
+            <span>Всего: <span id="totalTasks">0</span></span>
+            <span>Выполнено: <span id="completedTasks">0</span></span>
+            <span>Просрочено: <span id="overdueTasks">0</span></span>
+        </div>
+        
+        <!-- Список задач -->
+        <div class="tasks-container" id="tasksContainer">
+            <!-- Задачи будут добавляться сюда динамически -->
+        </div>
+        
+        <!-- Подсказка для установки PWA (показывается только в браузере на iOS) -->
+        <div class="install-prompt" id="installPrompt" style="display: none;">
+            <div class="prompt-content">
+                <span class="close-prompt" id="closePrompt">✕</span>
+                <p>📱 Установите приложение на iPhone:</p>
+                <ol>
+                    <li>Нажмите <span class="share-icon">⎙</span> "Поделиться"</li>
+                    <li>Выберите "На экран «Домой»"</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Подключение JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
