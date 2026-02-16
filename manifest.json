@@ -8,10 +8,6 @@
   "theme_color": "#4361ee",
   "orientation": "portrait",
   "scope": "/",
-  {
-  "background_color": "#4361ee",
-  "theme_color": "#4361ee"
-}
   "icons": [
     {
       "src": "/todo/icons/icon-72x72.png",
@@ -73,3 +69,4 @@
   ]
 
 }
+
