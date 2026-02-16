@@ -2,7 +2,7 @@
   "name": "Умный To-Do лист",
   "short_name": "To-Do",
   "description": "Управляйте задачами с приоритетами, категориями и дедлайнами",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#4361ee",
