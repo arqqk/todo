@@ -1,10 +1,10 @@
 const CACHE_NAME = 'todo-pwa-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
+  'index.html',
+  'styles.css',
+  'app.js',
+  'manifest.json',
   'icons/icon-72x72.png',
   'icons/icon-96x96.png',
   'icons/icon-120x120.png',
