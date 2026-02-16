@@ -1,20 +1,20 @@
 const CACHE_NAME = 'todo-pwa-v1';
 const urlsToCache = [
-  '/',
-  'index.html',
-  'styles.css',
-  'app.js',
-  'manifest.json',
-  'icons/icon-72x72.png',
-  'icons/icon-96x96.png',
-  'icons/icon-120x120.png',
-  'icons/icon-128x128.png',
-  'icons/icon-144x144.png',
-  'icons/icon-152x152.png',
-  'icons/icon-180x180.png',
-  'icons/icon-192x192.png',
-  'icons/icon-384x384.png',
-  'icons/icon-512x512.png'
+  '/todo/',
+  '/todo/index.html',
+  '/todo/styles.css',
+  '/todo/app.js',
+  '/todo/manifest.json',
+  '/todo/icons/icon-72x72.png',
+  '/todo/icons/icon-96x96.png',
+  '/todo/icons/icon-120x120.png',
+  '/todo/icons/icon-128x128.png',
+  '/todo/icons/icon-144x144.png',
+  '/todo/icons/icon-152x152.png',
+  '/todo/icons/icon-180x180.png',
+  '/todo/icons/icon-192x192.png',
+  '/todo/icons/icon-384x384.png',
+  '/todo/icons/icon-512x512.png'
 ];
 
 // Установка сервис-воркера и кэширование ресурсов
@@ -53,4 +53,5 @@ self.addEventListener('activate', event => {
       );
     })
   );
+
 });
