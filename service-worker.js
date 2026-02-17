@@ -53,5 +53,5 @@ self.addEventListener('activate', event => {
       );
     })
   );
-
 });
+// Добавлена закрывающая скобка
