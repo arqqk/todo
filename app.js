@@ -10,14 +10,22 @@ class TodoApp {
     }
     
     init() {
+        console.log('App initializing...'); // Отладка
+        
         // Загрузка задач из localStorage
         this.loadTasks();
         
-        // Установка темы
-        this.setTheme(this.theme);
-        
         // Получение ссылок на элементы DOM
         this.cacheElements();
+        
+        // Проверка, что элементы найдены
+        if (!this.checkElements()) {
+            console.error('Critical elements not found!');
+            return;
+        }
+        
+        // Установка темы
+        this.setTheme(this.theme);
         
         // Добавление обработчиков событий
         this.bindEvents();
@@ -31,6 +39,8 @@ class TodoApp {
         
         // Регистрация сервис-воркера
         this.registerServiceWorker();
+        
+        console.log('App initialized successfully');
     }
     
     cacheElements() {
@@ -48,44 +58,83 @@ class TodoApp {
         this.closePrompt = document.getElementById('closePrompt');
     }
     
+    checkElements() {
+        let allGood = true;
+        if (!this.addBtn) { console.error('addBtn not found'); allGood = false; }
+        if (!this.taskInput) { console.error('taskInput not found'); allGood = false; }
+        if (!this.themeToggle) { console.error('themeToggle not found'); allGood = false; }
+        return allGood;
+    }
+    
     bindEvents() {
+        console.log('Binding events...'); // Отладка
+        
         // Добавление задачи
-        this.addBtn.addEventListener('click', () => this.addTask());
-        this.taskInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.addTask();
-        });
+        if (this.addBtn) {
+            this.addBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.addTask();
+            });
+        }
+        
+        if (this.taskInput) {
+            this.taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.addTask();
+                }
+            });
+        }
         
         // Фильтры
-        this.filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.currentFilter = btn.dataset.filter;
-                this.renderTasks();
+        if (this.filterBtns && this.filterBtns.length > 0) {
+            this.filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentFilter = btn.dataset.filter;
+                    this.renderTasks();
+                });
             });
-        });
+        }
         
         // Смена темы
-        this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        if (this.themeToggle) {
+            this.themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleTheme();
+            });
+        }
         
         // Закрытие подсказки установки
         if (this.closePrompt) {
-            this.closePrompt.addEventListener('click', () => {
+            this.closePrompt.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.installPrompt.style.display = 'none';
                 localStorage.setItem('installPromptClosed', 'true');
             });
         }
         
         // Drag & Drop события
-        this.tasksContainer.addEventListener('dragstart', this.handleDragStart.bind(this));
-        this.tasksContainer.addEventListener('dragover', this.handleDragOver.bind(this));
-        this.tasksContainer.addEventListener('drop', this.handleDrop.bind(this));
-        this.tasksContainer.addEventListener('dragend', this.handleDragEnd.bind(this));
+        if (this.tasksContainer) {
+            this.tasksContainer.addEventListener('dragstart', (e) => this.handleDragStart(e));
+            this.tasksContainer.addEventListener('dragover', (e) => this.handleDragOver(e));
+            this.tasksContainer.addEventListener('drop', (e) => this.handleDrop(e));
+            this.tasksContainer.addEventListener('dragend', (e) => this.handleDragEnd(e));
+        }
+        
+        // Отключаем стандартное поведение
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
     }
     
     addTask() {
         const text = this.taskInput.value.trim();
-        if (!text) return;
+        if (!text) {
+            alert('Пожалуйста, введите задачу');
+            return;
+        }
         
         const deadline = this.deadlineInput.value || null;
         
@@ -106,14 +155,6 @@ class TodoApp {
         
         this.updateStats();
         this.renderTasks();
-        
-        // Анимация добавления
-        setTimeout(() => {
-            const newTask = document.querySelector(`[data-id="${task.id}"]`);
-            if (newTask) {
-                newTask.style.animation = 'slideUp 0.3s ease';
-            }
-        }, 10);
     }
     
     deleteTask(id) {
@@ -133,7 +174,6 @@ class TodoApp {
         }
     }
     
-    // Drag & Drop обработчики
     handleDragStart(e) {
         const taskItem = e.target.closest('.task-item');
         if (!taskItem) return;
@@ -166,11 +206,9 @@ class TodoApp {
         
         if (!this.draggedItem) return;
         
-        const draggedId = this.draggedItem.dataset.id;
         const tasks = [...this.tasksContainer.children];
-        
-        // Обновление порядка задач
         const newOrder = [];
+        
         tasks.forEach((taskEl, index) => {
             const taskId = taskEl.dataset.id;
             const task = this.tasks.find(t => t.id === taskId);
@@ -192,7 +230,6 @@ class TodoApp {
         this.draggedItem = null;
     }
     
-    // Фильтрация задач
     getFilteredTasks() {
         if (this.currentFilter === 'all') {
             return this.tasks;
@@ -200,7 +237,6 @@ class TodoApp {
         return this.tasks.filter(task => task.category === this.currentFilter);
     }
     
-    // Проверка статуса дедлайна
     getDeadlineStatus(deadline) {
         if (!deadline) return null;
         
@@ -215,7 +251,6 @@ class TodoApp {
         return 'future';
     }
     
-    // Форматирование даты
     formatDate(dateString) {
         if (!dateString) return '';
         
@@ -236,11 +271,10 @@ class TodoApp {
         }
     }
     
-    // Отрисовка задач
     renderTasks() {
-        const filteredTasks = this.getFilteredTasks();
+        if (!this.tasksContainer) return;
         
-        // Сортировка по порядку
+        const filteredTasks = this.getFilteredTasks();
         filteredTasks.sort((a, b) => (a.order || 0) - (b.order || 0));
         
         this.tasksContainer.innerHTML = filteredTasks.map(task => {
@@ -283,7 +317,6 @@ class TodoApp {
         }).join('');
     }
     
-    // Обновление статистики
     updateStats() {
         const total = this.tasks.length;
         const completed = this.tasks.filter(t => t.completed).length;
@@ -298,18 +331,16 @@ class TodoApp {
             return taskDate < today;
         }).length;
         
-        this.totalSpan.textContent = total;
-        this.completedSpan.textContent = completed;
-        this.overdueSpan.textContent = overdue;
+        if (this.totalSpan) this.totalSpan.textContent = total;
+        if (this.completedSpan) this.completedSpan.textContent = completed;
+        if (this.overdueSpan) this.overdueSpan.textContent = overdue;
     }
     
-    // Сохранение задач в localStorage
     saveTasks() {
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
         this.updateStats();
     }
     
-    // Загрузка задач из localStorage
     loadTasks() {
         const savedTasks = localStorage.getItem('tasks');
         if (savedTasks) {
@@ -317,7 +348,6 @@ class TodoApp {
         }
     }
     
-    // Переключение темы
     toggleTheme() {
         this.theme = this.theme === 'light' ? 'dark' : 'light';
         this.setTheme(this.theme);
@@ -326,17 +356,17 @@ class TodoApp {
     
     setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        this.themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+        if (this.themeToggle) {
+            this.themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
     }
     
-    // Экранирование HTML
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
     
-    // Проверка на iOS и показ подсказки установки
     checkForIOSInstall() {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         const isInStandalone = window.navigator.standalone;
@@ -349,11 +379,10 @@ class TodoApp {
         }
     }
     
-    // Регистрация сервис-воркера
     registerServiceWorker() {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
                         console.log('ServiceWorker зарегистрирован:', registration.scope);
                     })
@@ -365,6 +394,8 @@ class TodoApp {
     }
 }
 
-// Инициализация приложения
-const app = new TodoApp();
-window.app = app; // Для доступа из onclick
+// Инициализация приложения после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, creating app...');
+    window.app = new TodoApp();
+});
