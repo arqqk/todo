@@ -1,6 +1,6 @@
 {
-  "name": "do it",
-  "short_name": "q)",
+  "name": "Умный To-Do лист",
+  "short_name": "To-Do)",
   "description": "Управляйте задачами с приоритетами, категориями и дедлайнами",
   "start_url": "./",
   "display": "standalone",
